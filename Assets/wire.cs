@@ -8,6 +8,8 @@ public class wire : MonoBehaviour
 	public GameObject cam;
 	Vector3 left;
 	Vector3 right;
+	Vector3 direction;
+	public LayerMask layer;
 	public GameObject t;
 	// Start is called before the first frame update
 	void Start()
@@ -26,29 +28,32 @@ public class wire : MonoBehaviour
 		RaycastHit hit=new RaycastHit();
 		Debug.DrawRay(ray.origin, ray.direction * 100.0f, Color.red, 0.0f);
 		
-		if (Input.GetMouseButtonDown(0))
+		if (Input.GetKeyDown(KeyCode.A))
 		{
-			if (Physics.Raycast(ray, out hit, 100.0f))
+			if (Physics.Raycast(ray, out hit, 100.0f,layer))
 			{
 				right = hit.point - transform.position;
 				right.Normalize();
-				Debug.Log(right);
+				
 				Instantiate(t, hit.point, Quaternion.identity);
 			}
 		}
-		if (Input.GetMouseButtonDown(1))
+		if (Input.GetKeyDown(KeyCode.S))
 		{
-			if (Physics.Raycast(ray, out hit, 100.0f))
+			if (Physics.Raycast(ray, out hit, 100.0f,layer))
 			{
 				left = hit.point-transform.position;
 				left.Normalize();
-				Debug.Log(left);
+				
 				Instantiate(t,hit.point,Quaternion.identity);
 			}
 		}
-		if (Input.GetKeyDown(KeyCode.Space))
+		if (Input.GetKey(KeyCode.Space))
 		{
-			rigidbody.AddForce((left+right)*10.0f,ForceMode.Impulse);
+			rigidbody.AddForce((left+right)*10,ForceMode.Force);
 		}
+		direction = (left + right);
+		direction.Normalize();
+		Debug.Log(direction);
 	}
 }
