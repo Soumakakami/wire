@@ -32,13 +32,13 @@ public class wire : MonoBehaviour
 	{
 		Ray ray = new Ray(cam.transform.position, cam.transform.forward);
 		RaycastHit hit=new RaycastHit();
-		Debug.DrawRay(ray.origin, ray.direction * 100.0f, Color.red, 0.0f);
+		Debug.DrawRay(ray.origin, ray.direction * 200.0f, Color.red, 0.0f);
 		
 		if (Input.GetKeyDown(KeyCode.A))
 		{
 			if (Physics.Raycast(ray, out hit, 100.0f,layer))
 			{
-				right = hit.point - transform.position;
+				right = hit.point;
 				t1 = hit.point;
 				right.Normalize();
 				
@@ -47,9 +47,9 @@ public class wire : MonoBehaviour
 		}
 		if (Input.GetKeyDown(KeyCode.S))
 		{
-			if (Physics.Raycast(ray, out hit, 100.0f,layer))
+			if (Physics.Raycast(ray, out hit, 200.0f,layer))
 			{
-				left = hit.point-transform.position;
+				left = hit.point;
 				t2 = hit.point;
 				left.Normalize();
 				
@@ -58,7 +58,7 @@ public class wire : MonoBehaviour
 		}
 		if (Input.GetKey(KeyCode.Space))
 		{
-			rigidbody.AddForce((left+right)*10,ForceMode.Force);
+			rigidbody.AddForce(direction*10,ForceMode.Force);
 		}
 		var dir = Vector3.Distance(transform.position,t1);
 		var dir1 = Vector3.Distance(transform.position, t2);
@@ -68,8 +68,7 @@ public class wire : MonoBehaviour
 		leftWire.transform.localScale = new Vector3(leftWire.transform.localScale.x, leftWire.transform.localScale.y, dir);
 		rightWire.transform.LookAt(t2);
 		rightWire.transform.localScale = new Vector3(rightWire.transform.localScale.x, rightWire.transform.localScale.y, dir1);
-		direction = (left + right);
-		direction.Normalize();
-
+		direction = (left-transform.position) + (right - transform.position);
+		Debug.Log(direction);
 	}
 }
