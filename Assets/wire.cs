@@ -8,6 +8,12 @@ public class wire : MonoBehaviour
 	public GameObject cam;
 	Vector3 left;
 	Vector3 right;
+	Vector3 t1;
+	Vector3 t2;
+
+	public GameObject leftWire;
+	public GameObject rightWire;
+
 	Vector3 direction;
 	public LayerMask layer;
 	public GameObject t;
@@ -33,6 +39,7 @@ public class wire : MonoBehaviour
 			if (Physics.Raycast(ray, out hit, 100.0f,layer))
 			{
 				right = hit.point - transform.position;
+				t1 = hit.point;
 				right.Normalize();
 				
 				Instantiate(t, hit.point, Quaternion.identity);
@@ -43,6 +50,7 @@ public class wire : MonoBehaviour
 			if (Physics.Raycast(ray, out hit, 100.0f,layer))
 			{
 				left = hit.point-transform.position;
+				t2 = hit.point;
 				left.Normalize();
 				
 				Instantiate(t,hit.point,Quaternion.identity);
@@ -52,8 +60,16 @@ public class wire : MonoBehaviour
 		{
 			rigidbody.AddForce((left+right)*10,ForceMode.Force);
 		}
+		var dir = Vector3.Distance(transform.position,t1);
+		var dir1 = Vector3.Distance(transform.position, t2);
+		var aim = t1 - leftWire.transform.position;
+		var look = Quaternion.LookRotation(aim);
+		leftWire.transform.LookAt(t1);
+		leftWire.transform.localScale = new Vector3(leftWire.transform.localScale.x, leftWire.transform.localScale.y, dir);
+		rightWire.transform.LookAt(t2);
+		rightWire.transform.localScale = new Vector3(rightWire.transform.localScale.x, rightWire.transform.localScale.y, dir1);
 		direction = (left + right);
 		direction.Normalize();
-		Debug.Log(direction);
+
 	}
 }
